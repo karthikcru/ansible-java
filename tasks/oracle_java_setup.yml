@@ -1,0 +1,23 @@
+---
+- name: Check if python-software-properties is installed
+  command: dpkg-query -l python-software-properties
+  register: is_installed_python
+#  failed_when: is_installed_python.rc > 1
+  changed_when: no
+
+- name: Install python software properties if already installed
+  apt:
+    name="python-software-properties"
+    state=latest
+    update_cache=yes
+  when: is_installed_python.rc > 0
+
+- name: Add the webupd8 APT repository
+  sudo: yes
+  apt_repository:
+    repo: "ppa:webupd8team/java"
+    state: present
+
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=600
+

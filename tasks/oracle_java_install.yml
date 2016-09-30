@@ -1,0 +1,14 @@
+---
+
+- name: Install JDK
+  sudo: yes
+  apt:
+    pkg: "{{item}}"
+    state: latest
+  when: item|search("^oracle")
+  with_items: java_versions
+
+- name: Set default JAVA version
+  sudo: yes
+  shell: "update-java-alternatives -s {{java_default_version}}"
+  when: java_default_version is defined
